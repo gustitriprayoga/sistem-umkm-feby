@@ -1,0 +1,58 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/26.2.2 Chrome/134.0.6998.178 Electron/35.1.2 Safari/537.36" version="26.2.2">
+  <diagram name="Page-1" id="-Ouxz08pKRJPmLthxf09">
+    <mxGraphModel dx="1428" dy="824" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="-CIsHNdacfX2C-PG1zb3-10" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;startFill=0;" edge="1" parent="1" source="-CIsHNdacfX2C-PG1zb3-1" target="-CIsHNdacfX2C-PG1zb3-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="-CIsHNdacfX2C-PG1zb3-12" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;startFill=0;" edge="1" parent="1" source="-CIsHNdacfX2C-PG1zb3-1" target="-CIsHNdacfX2C-PG1zb3-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="-CIsHNdacfX2C-PG1zb3-14" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;startFill=0;" edge="1" parent="1" source="-CIsHNdacfX2C-PG1zb3-1" target="-CIsHNdacfX2C-PG1zb3-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="-CIsHNdacfX2C-PG1zb3-15" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;startFill=0;" edge="1" parent="1" source="-CIsHNdacfX2C-PG1zb3-1" target="-CIsHNdacfX2C-PG1zb3-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="-CIsHNdacfX2C-PG1zb3-1" value="Pemilik" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="560" y="230" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="-CIsHNdacfX2C-PG1zb3-11" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;startFill=0;" edge="1" parent="1" source="-CIsHNdacfX2C-PG1zb3-3" target="-CIsHNdacfX2C-PG1zb3-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="-CIsHNdacfX2C-PG1zb3-13" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;startFill=0;" edge="1" parent="1" source="-CIsHNdacfX2C-PG1zb3-3" target="-CIsHNdacfX2C-PG1zb3-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="-CIsHNdacfX2C-PG1zb3-16" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;startFill=0;" edge="1" parent="1" source="-CIsHNdacfX2C-PG1zb3-3" target="-CIsHNdacfX2C-PG1zb3-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="-CIsHNdacfX2C-PG1zb3-3" value="Karyawan" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="170" y="230" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="-CIsHNdacfX2C-PG1zb3-6" value="Lihat Ringkasan keuangan" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="320" y="250" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="-CIsHNdacfX2C-PG1zb3-8" value="Logout" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="320" y="390" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="-CIsHNdacfX2C-PG1zb3-9" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.017;entryY=0.7;entryDx=0;entryDy=0;entryPerimeter=0;endArrow=none;startFill=0;" edge="1" parent="1" source="-CIsHNdacfX2C-PG1zb3-3" target="-CIsHNdacfX2C-PG1zb3-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="-CIsHNdacfX2C-PG1zb3-18" value="Use Case Diagram" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="240" y="55" width="280" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="-CIsHNdacfX2C-PG1zb3-4" value="Login" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="-CIsHNdacfX2C-PG1zb3-18">
+          <mxGeometry x="80" y="55" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="-CIsHNdacfX2C-PG1zb3-5" value="Input Transaksi" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="-CIsHNdacfX2C-PG1zb3-18">
+          <mxGeometry x="80" y="125" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="-CIsHNdacfX2C-PG1zb3-7" value="Cetak Laporan" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="-CIsHNdacfX2C-PG1zb3-18">
+          <mxGeometry x="80" y="265" width="120" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
