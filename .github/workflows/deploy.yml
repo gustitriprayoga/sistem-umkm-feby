@@ -1,0 +1,52 @@
+# Nama workflow
+name: Deploy with rsync over SSH
+
+# Pemicu workflow
+on:
+  push:
+    branches:
+      - main  # Ganti dengan nama branch utama Anda (misal: master)
+
+# Daftar pekerjaan
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    # Langkah 1: Checkout kode dari repositori
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # Langkah 2: (Opsional) Build step jika perlu
+    # - name: Install dependencies and build
+    #   run: |
+    #     npm install
+    #     npm run build
+    #   # Ganti `SOURCE` di bawah menjadi './build/' atau './dist/' sesuai output build
+
+    # Langkah 3: Deploy menggunakan rsync
+    - name: Deploy with rsync
+      uses: easingthemes/ssh-deploy@v5.0.0
+      with:
+        # Kunci privat SSH, diambil dari GitHub Secrets
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        
+        # Alamat host server, diambil dari GitHub Secrets
+        REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+        
+        # User cPanel, diambil dari GitHub Secrets
+        REMOTE_USER: ${{ secrets.REMOTE_USER }}
+        
+        # Port SSH, diambil dari GitHub Secrets
+        REMOTE_PORT: ${{ secrets.REMOTE_PORT }}
+        
+        # Direktori sumber di runner (proyek Anda)
+        # './' berarti root dari repositori Anda
+        SOURCE: "./"
+        
+        # Direktori tujuan di server cPanel
+        # GANTI DENGAN PATH YANG BENAR!
+        TARGET: "public_html/hana.laratest.my.id"
+        
+        # Folder atau file yang ingin diabaikan
+        EXCLUDE: "/.git/, /node_modules/"
