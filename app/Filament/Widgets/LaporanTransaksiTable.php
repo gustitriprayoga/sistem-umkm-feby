@@ -7,17 +7,20 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Support\Arr;
-// PERUBAHAN: Tambahkan 'use' untuk listener
 use Livewire\Attributes\On;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
+use pxlrbt\FilamentExcel\Columns\Column;
+use pxlrbt\FilamentExcel\Exports\ExcelExport;
 
 class LaporanTransaksiTable extends BaseWidget
 {
     protected static ?string $heading = 'Detail Transaksi';
 
-    // PERUBAHAN: Tambahkan properti untuk menyimpan filter
+    // --- PERUBAHAN DI SINI: Tambahkan baris ini ---
+    protected int | string | array $columnSpan = 'full';
+
     public ?array $filters = [];
 
-    // PERUBAHAN: Tambahkan listener untuk event 'updateLaporanFilter'
     #[On('updateLaporanFilter')]
     public function updateFilters(array $filters): void
     {
@@ -26,9 +29,10 @@ class LaporanTransaksiTable extends BaseWidget
 
     public function table(Table $table): Table
     {
-        // PERUBAHAN: Baca dari properti $this->filters
-        $tanggalMulai = Arr::get($this->filters, 'tanggal_mulai');
-        $tanggalSelesai = Arr::get($this->filters, 'tanggal_selesai');
+        $filters = $this->filters;
+        $tanggalMulai = Arr::get($filters, 'tanggal_mulai', 'awal');
+        $tanggalSelesai = Arr::get($filters, 'tanggal_selesai', 'akhir');
+        $fileName = "laporan-keuangan-{$tanggalMulai}-sampai-{$tanggalSelesai}";
 
         return $table
             ->query(
@@ -36,6 +40,23 @@ class LaporanTransaksiTable extends BaseWidget
                     ->when($tanggalMulai, fn($q) => $q->whereDate('tanggal_transaksi', '>=', $tanggalMulai))
                     ->when($tanggalSelesai, fn($q) => $q->whereDate('tanggal_transaksi', '<=', $tanggalSelesai))
             )
+            ->headerActions([
+                ExportAction::make()
+                    ->label('Export Excel')
+                    ->exports([
+                        ExcelExport::make()
+                            ->fromTable()
+                            ->withFilename($fileName)
+                            ->withColumns([
+                                Column::make('tanggal_transaksi')->heading('Tanggal Transaksi'),
+                                Column::make('jenis')->heading('Jenis'),
+                                Column::make('kategori.nama_kategori')->heading('Kategori'),
+                                Column::make('jumlah')->heading('Jumlah'),
+                                Column::make('deskripsi')->heading('Deskripsi'),
+                                Column::make('user.name')->heading('Dicatat Oleh'),
+                            ])
+                    ])
+            ])
             ->defaultSort('tanggal_transaksi', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make('tanggal_transaksi')->date()->label('Tanggal'),
