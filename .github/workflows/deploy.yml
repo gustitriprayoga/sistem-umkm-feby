@@ -1,52 +1,74 @@
-# Nama workflow
-name: Deploy with rsync over SSH
+name: Deploy Laravel Application
 
-# Pemicu workflow
 on:
   push:
     branches:
-      - main  # Ganti dengan nama branch utama Anda (misal: master)
+      - main
 
-# Daftar pekerjaan
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
-    # Langkah 1: Checkout kode dari repositori
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    # Langkah 2: (Opsional) Build step jika perlu
-    # - name: Install dependencies and build
-    #   run: |
-    #     npm install
-    #     npm run build
-    #   # Ganti `SOURCE` di bawah menjadi './build/' atau './dist/' sesuai output build
-
-    # Langkah 3: Deploy menggunakan rsync
-    - name: Deploy with rsync
+    - name: Sync application files (with protection for user uploads)
       uses: easingthemes/ssh-deploy@v5.0.0
       with:
-        # Kunci privat SSH, diambil dari GitHub Secrets
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        
-        # Alamat host server, diambil dari GitHub Secrets
         REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-        
-        # User cPanel, diambil dari GitHub Secrets
         REMOTE_USER: ${{ secrets.REMOTE_USER }}
-        
-        # Port SSH, diambil dari GitHub Secrets
         REMOTE_PORT: ${{ secrets.REMOTE_PORT }}
-        
-        # Direktori sumber di runner (proyek Anda)
-        # './' berarti root dari repositori Anda
         SOURCE: "./"
-        
-        # Direktori tujuan di server cPanel
-        # GANTI DENGAN PATH YANG BENAR!
         TARGET: "public_html/hana.laratest.my.id"
-        
-        # Folder atau file yang ingin diabaikan
-        EXCLUDE: "/.git/, /node_modules/"
+        # DITAMBAHKAN: Melindungi folder tempat file unggahan disimpan
+        EXCLUDE: "/.git/, /node_modules/, /vendor/, /storage/app/public/"
+
+    - name: Run setup commands on server
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.REMOTE_HOST }}
+        username: ${{ secrets.REMOTE_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ secrets.REMOTE_PORT }}
+        script: |
+          cd public_html/hana.laratest.my.id
+          echo "🚀🚀🚀 Mulai Proses Deploy Laravel 🚀🚀🚀"
+
+          # 1. Setup .env file
+          cp .env.example .env
+          echo "🚀🚀🚀 Laravel .env Berhasil Disalin 🚀🚀🚀"
+          sed -i "s|APP_URL=http://localhost|APP_URL=http://hana.laratest.my.id/|g" .env
+          echo "🚀🚀🚀 Laravel .env Berhasil Disalin 🚀🚀🚀"
+          sed -i "s|DB_DATABASE=laravel|DB_DATABASE=koda1984_sistem-hana|g" .env
+          echo "🚀🚀🚀 Laravel DB_DATABASE Berhasil Disalin 🚀🚀🚀"
+          sed -i "s|DB_USERNAME=root|DB_USERNAME=koda1984_10sarea-admin|g" .env
+          echo "🚀🚀🚀 Laravel DB_USERNAME Berhasil Disalin 🚀🚀🚀"
+          sed -i "s|DB_PASSWORD=|DB_PASSWORD=bangkinang123|g" .env
+          echo "🚀🚀🚀 Laravel DB_PASSWORD Berhasil Disalin 🚀🚀🚀"
+          sed -i "s|APP_NAME=laravel|APP_NAME=UMKM Hana|g" .env
+
+          # 2. Run Laravel installation and optimization
+          composer install --optimize-autoloader
+          echo "🚀🚀🚀 Laravel Install Dan Update Berhasil 🚀🚀🚀"
+          php artisan key:generate
+          echo "🚀🚀🚀 Laravel Key Generate Berhasil 🚀🚀🚀"
+          php artisan optimize:clear
+          echo "🚀🚀🚀 Laravel Optimize Clear Berhasil 🚀🚀🚀"
+          php artisan migrate:fresh --seed
+          echo "🚀🚀🚀 Laravel Migrate Fresh Seed Berhasil 🚀🚀🚀"
+          php artisan key:generate
+          echo "🚀🚀🚀 Laravel Key Generate Berhasil 🚀🚀🚀"
+          # composer update
+          composer dump-autoload
+          echo "🚀🚀🚀 Laravel Composer Dump Autoload Berhasil 🚀🚀🚀"
+
+          # 3. Create storage link manually
+          if [ -L "public/storage" ]; then
+              rm "public/storage"
+          fi
+          ln -s $PWD/storage/app/public $PWD/public/storage
+          echo "🚀🚀🚀 Laravel Storage Link Berhasil 🚀🚀🚀"
+
+          echo "🚀🚀🚀Semua Step Berhasil Dijalankan 🚀🚀🚀"

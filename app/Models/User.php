@@ -43,4 +43,18 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * Get the transactions associated with the user.
+     */
+
+     public function transaksi()
+     {
+         return $this->hasMany(Transaksi::class);
+     }
+
+     public function distribusi()
+     {
+         return $this->hasMany(Distribusi::class, 'agen_id');
+     }
 }
