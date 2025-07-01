@@ -1,66 +1,84 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+Coding partner
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Show thinking
+Tentu, ini adalah draf README.md yang cocok untuk proyek sistem pencatatan keuangan Anda, lengkap dengan deskripsi, fitur, teknologi, dan panduan instalasi.
 
-## About Laravel
+Sistem Pencatatan Keuangan - Kedai UMKM Hana
+Proyek ini adalah implementasi dari skripsi berjudul "RANCANG BANGUN SISTEM PENCATATAN KEUANGAN BERBASIS WEB BERDASARKAN TRANSAKSI HARIAN STUDI KASUS KEDAI UMKM HANA KECAMATAN KUOK".
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Sistem ini dikembangkan untuk mengatasi permasalahan pencatatan keuangan yang masih dilakukan secara manual menggunakan buku tulis di Kedai UMKM Hana. Tujuannya adalah menyediakan solusi digital berbasis web yang mudah digunakan untuk mencatat transaksi, memantau kondisi keuangan, dan mengelola data setoran barang dari agen secara efisien dan akurat.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-## Learning Laravel
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Fitur Utama ✨
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Manajemen Multi-Peran: Sistem memiliki tiga peran utama dengan hak akses yang terpisah dengan jelas: Pemilik, Karyawan, dan Agen.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Halaman Khusus Sesuai Peran: Setiap peran memiliki halaman khusus yang dirancang untuk tugas utama mereka:
 
-## Laravel Sponsors
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Karyawan: Halaman untuk mencatat pemasukan dan pengeluaran harian dengan cepat.
 
-### Premium Partners
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+Agen: Halaman untuk mencatat setoran barang yang mereka kirim ke kedai, lengkap dengan riwayatnya.
 
-## Contributing
+Pemilik: Dashboard komprehensif untuk mengelola semua aspek sistem.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-## Code of Conduct
+Laporan Keuangan Interaktif: Halaman laporan khusus untuk Pemilik yang menampilkan ringkasan statistik (pemasukan, pengeluaran, keuntungan) dan detail transaksi dengan filter rentang tanggal yang dinamis.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-## Security Vulnerabilities
+Manajemen Data Master: Pemilik dapat mengelola data penting seperti akun pengguna (Karyawan & Agen) dan kategori transaksi.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
-## License
+Monitoring Setoran Agen: Pemilik dapat memantau semua riwayat setoran barang yang dilakukan oleh setiap Agen.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Teknologi yang Digunakan 🛠️
+Framework: Laravel 10
+
+Admin Panel: Filament 3
+
+Manajemen Peran: Spatie/laravel-permission
+
+Database: MySQL
+
+Instalasi ⚙️
+Berikut adalah langkah-langkah untuk menjalankan proyek ini di lingkungan lokal.
+
+Clone Repository
+
+Bash
+
+git clone [URL_REPOSITORY_ANDA]
+cd [NAMA_FOLDER_PROYEK]
+Install Dependencies
+
+Bash
+
+composer install
+Setup Environment
+Salin file .env.example menjadi .env.
+
+Bash
+
+cp .env.example .env
+Buka file .env dan sesuaikan konfigurasi database Anda (DB_DATABASE, DB_USERNAME, DB_PASSWORD).
+
+Generate Application Key
+
+Bash
+
+php artisan key:generate
+Jalankan Migrasi & Seeder
+Perintah ini akan membuat semua tabel database dan mengisinya dengan data awal (peran dan pengguna dummy).
+
+Bash
+
+php artisan migrate:fresh --seed
+Jalankan Aplikasi
+
+Bash
+
+php artisan serve
+Aplikasi sekarang berjalan di http://127.0.0.1:8000.
