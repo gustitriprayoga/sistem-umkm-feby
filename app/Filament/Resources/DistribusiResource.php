@@ -18,7 +18,7 @@ class DistribusiResource extends Resource
 {
     protected static ?string $model = Distribusi::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Kelola Distribusi';
 
     public static function canViewAny(): bool
     {

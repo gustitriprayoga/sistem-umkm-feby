@@ -6,24 +6,31 @@ use App\Models\Transaksi;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Arr;
+// PERUBAHAN: Tambahkan 'use' untuk listener
+use Livewire\Attributes\On;
 
 class LaporanStatsOverview extends BaseWidget
 {
-    // Mengambil data filter dari halaman induk dan menghitung statistik
+    // PERUBAHAN: Tambahkan properti untuk menyimpan filter
+    public ?array $filters = [];
+
+    // PERUBAHAN: Tambahkan listener untuk event 'updateLaporanFilter'
+    #[On('updateLaporanFilter')]
+    public function updateFilters(array $filters): void
+    {
+        $this->filters = $filters;
+    }
+
     protected function getStats(): array
     {
-        // Menarik data filter dari properti publik 'data' di halaman LaporanKeuangan
-        $filters = $this->getPage()->data;
+        // PERUBAHAN: Baca dari properti $this->filters
+        $tanggalMulai = Arr::get($this->filters, 'tanggal_mulai');
+        $tanggalSelesai = Arr::get($this->filters, 'tanggal_selesai');
 
-        $tanggalMulai = Arr::get($filters, 'tanggal_mulai');
-        $tanggalSelesai = Arr::get($filters, 'tanggal_selesai');
-
-        // Membangun query dengan filter tanggal
         $query = Transaksi::query()
             ->when($tanggalMulai, fn($q) => $q->whereDate('tanggal_transaksi', '>=', $tanggalMulai))
             ->when($tanggalSelesai, fn($q) => $q->whereDate('tanggal_transaksi', '<=', $tanggalSelesai));
 
-        // Melakukan kalkulasi
         $totalPemasukan = (clone $query)->where('jenis', 'pemasukan')->sum('jumlah');
         $totalPengeluaran = (clone $query)->where('jenis', 'pengeluaran')->sum('jumlah');
         $keuntungan = $totalPemasukan - $totalPengeluaran;

@@ -7,19 +7,28 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Support\Arr;
+// PERUBAHAN: Tambahkan 'use' untuk listener
+use Livewire\Attributes\On;
 
 class LaporanTransaksiTable extends BaseWidget
 {
     protected static ?string $heading = 'Detail Transaksi';
 
-    // Mengambil data filter dari halaman dan membangun tabel
+    // PERUBAHAN: Tambahkan properti untuk menyimpan filter
+    public ?array $filters = [];
+
+    // PERUBAHAN: Tambahkan listener untuk event 'updateLaporanFilter'
+    #[On('updateLaporanFilter')]
+    public function updateFilters(array $filters): void
+    {
+        $this->filters = $filters;
+    }
+
     public function table(Table $table): Table
     {
-        // Menarik data filter dari properti publik 'data' di halaman LaporanKeuangan
-        $filters = $this->getPage()->data;
-
-        $tanggalMulai = Arr::get($filters, 'tanggal_mulai');
-        $tanggalSelesai = Arr::get($filters, 'tanggal_selesai');
+        // PERUBAHAN: Baca dari properti $this->filters
+        $tanggalMulai = Arr::get($this->filters, 'tanggal_mulai');
+        $tanggalSelesai = Arr::get($this->filters, 'tanggal_selesai');
 
         return $table
             ->query(

@@ -15,34 +15,33 @@ class LaporanKeuangan extends Page implements HasForms
 {
     use InteractsWithForms;
 
-    protected static ?string $navigationIcon = 'heroicon-o-document-chart-bar';
     protected static ?string $navigationGroup = 'Laporan';
     protected static string $view = 'filament.pages.laporan-keuangan';
     protected static ?string $title = 'Laporan Keuangan';
 
-    // Properti publik untuk menyimpan state filter
     public ?array $data = [];
 
-    // Fungsi untuk membatasi akses hanya untuk 'Pemilik'
     public static function canAccess(): bool
     {
         return auth()->user()->hasRole('pemilik');
     }
 
-    // Mengatur nilai default filter saat halaman pertama kali dibuka
+
     public function mount(): void
     {
         $this->form->fill([
             'tanggal_mulai' => now()->startOfMonth(),
             'tanggal_selesai' => now()->endOfMonth(),
         ]);
-
         $this->data = $this->form->getState();
+
+        // PERUBAHAN: Kirim event saat halaman pertama kali dimuat
+        $this->dispatch('updateLaporanFilter', filters: $this->data);
     }
 
-    // Mendefinisikan elemen-elemen form filter
     public function form(Form $form): Form
     {
+        // ... (Tidak ada perubahan di sini) ...
         return $form
             ->statePath('data')
             ->schema([
@@ -57,25 +56,21 @@ class LaporanKeuangan extends Page implements HasForms
             ]);
     }
 
-    // Fungsi yang dijalankan saat tombol "Terapkan Filter" ditekan
     public function submit(): void
     {
         $this->data = $this->form->getState();
+
+        // PERUBAHAN: Kirim event saat filter diterapkan
+        $this->dispatch('updateLaporanFilter', filters: $this->data);
     }
 
-    // Mendaftarkan widget statistik (atas)
     protected function getHeaderWidgets(): array
     {
-        return [
-            LaporanStatsOverview::class,
-        ];
+        return [LaporanStatsOverview::class];
     }
 
-    // Mendaftarkan widget tabel (bawah)
     protected function getFooterWidgets(): array
     {
-        return [
-            LaporanTransaksiTable::class,
-        ];
+        return [LaporanTransaksiTable::class];
     }
 }

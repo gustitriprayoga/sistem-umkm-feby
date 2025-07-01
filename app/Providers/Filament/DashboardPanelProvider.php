@@ -6,6 +6,7 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationGroup;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -27,6 +28,17 @@ class DashboardPanelProvider extends PanelProvider
             ->id('dashboard')
             ->path('dashboard')
             ->brandName('UMKM Hana')
+            ->navigationGroups([
+                NavigationGroup::make()
+                     ->label('Kelola Distribusi')
+                     ->icon('heroicon-o-truck'),
+                NavigationGroup::make()
+                    ->label('Kelola Transaksi')
+                    ->icon('heroicon-o-currency-dollar'),
+                NavigationGroup::make()
+                    ->label('Laporan')
+                    ->icon('heroicon-o-chart-bar'),
+            ])
             ->login()
             ->colors([
                 'primary' => Color::Amber,
