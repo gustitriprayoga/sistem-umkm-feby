@@ -16,8 +16,8 @@ class RolesAndPermissionsSeeder extends Seeder
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         // Buat Roles
-        Role::create(['name' => 'Pemilik', 'guard_name' => 'web']);
-        Role::create(['name' => 'Karyawan', 'guard_name' => 'web']);
-        Role::create(['name' => 'Agen', 'guard_name' => 'web']);
+        Role::create(['name' => 'pemilik', 'guard_name' => 'web']);
+        Role::create(['name' => 'karyawan', 'guard_name' => 'web']);
+        Role::create(['name' => 'agen', 'guard_name' => 'web']);
     }
 }
