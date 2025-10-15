@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
     {
         // Membuat User Pemilik
         $pemilik = User::create([
-            'name' => 'Feby Rahayu Putri',
+            'name' => 'pemilik',
             'email' => 'pemilik@hana.com',
             'password' => Hash::make('pemilik123'),
         ]);
@@ -23,7 +23,7 @@ class UserSeeder extends Seeder
 
         // Membuat User Karyawan
         $karyawan = User::create([
-            'name' => 'Zola Karyawan',
+            'name' => 'Karyawan',
             'email' => 'karyawan@hana.com',
             'password' => Hash::make('karyawan123'),
         ]);
@@ -36,9 +36,9 @@ class UserSeeder extends Seeder
         ]);
         $agen->assignRole('agen');
 
-        // Membuat beberapa User Agen menggunakan factory
-        User::factory(5)->create()->each(function ($user) {
-            $user->assignRole('Agen');
-        });
+        // // Membuat beberapa User Agen menggunakan factory
+        // User::factory(5)->create()->each(function ($user) {
+        //     $user->assignRole('Agen');
+        // });
     }
 }
