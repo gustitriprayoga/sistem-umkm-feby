@@ -30,11 +30,15 @@ class DashboardPanelProvider extends PanelProvider
             ->brandName('UMKM Hana')
             ->navigationGroups([
                 NavigationGroup::make()
-                     ->label('Kelola Distribusi')
-                     ->icon('heroicon-o-truck'),
+                    ->label('Kelola Barang')
+                    ->icon('heroicon-o-cube'),
+                NavigationGroup::make()
+                    ->label('Kelola Distribusi')
+                    ->icon('heroicon-o-truck'),
                 NavigationGroup::make()
                     ->label('Kelola Transaksi')
                     ->icon('heroicon-o-currency-dollar'),
+
                 NavigationGroup::make()
                     ->label('Laporan')
                     ->icon('heroicon-o-chart-bar'),

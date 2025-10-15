@@ -10,10 +10,12 @@ class ListBarangs extends ListRecords
 {
     protected static string $resource = BarangResource::class;
 
+    protected static ?string $title = 'Daftar Barang Toko Hana';
+
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            // Actions\CreateAction::make(),
         ];
     }
 }

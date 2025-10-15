@@ -2,20 +2,21 @@
 
 namespace App\Filament\Pages;
 
-use Filament\Pages\Page;
-use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Form;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\DatePicker;
 use App\Filament\Widgets\LaporanStatsOverview;
 use App\Filament\Widgets\LaporanTransaksiTable;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Form;
+use Filament\Pages\Page;
 
 class LaporanKeuangan extends Page implements HasForms
 {
     use InteractsWithForms;
 
     protected static ?string $navigationGroup = 'Laporan';
+    protected static ?int $navigationSort = 1;
     protected static string $view = 'filament.pages.laporan-keuangan';
     protected static ?string $title = 'Laporan Keuangan';
 
@@ -28,8 +29,8 @@ class LaporanKeuangan extends Page implements HasForms
 
     public function mount(): void
     {
-        // PERUBAHAN: Set default ke satu tahun terakhir saat halaman dimuat
-        $this->setFilterSatuTahunTerakhir();
+        // Default tetap ke bulan ini
+        $this->setFilterBulanan();
     }
 
     public function form(Form $form): Form
@@ -42,12 +43,10 @@ class LaporanKeuangan extends Page implements HasForms
                     ->schema([
                         DatePicker::make('tanggal_mulai')
                             ->label('Dari Tanggal')
-                            // TAMBAHAN: Buat date picker bereaksi langsung saat diubah
                             ->live()
                             ->afterStateUpdated(fn() => $this->submit()),
                         DatePicker::make('tanggal_selesai')
                             ->label('Sampai Tanggal')
-                            // TAMBAHAN: Buat date picker bereaksi langsung saat diubah
                             ->live()
                             ->afterStateUpdated(fn() => $this->submit()),
                     ]),
@@ -60,7 +59,7 @@ class LaporanKeuangan extends Page implements HasForms
         $this->dispatch('updateLaporanFilter', filters: $this->data);
     }
 
-    // --- METODE UNTUK FILTER CEPAT ---
+    // --- [1] METODE BARU UNTUK TOMBOL FILTER CEPAT ---
 
     public function setFilterHarian(): void
     {
@@ -97,26 +96,20 @@ class LaporanKeuangan extends Page implements HasForms
         ]);
         $this->submit();
     }
-
-    // PERUBAHAN BARU: Tambahkan metode ini untuk filter 1 tahun terakhir
-    public function setFilterSatuTahunTerakhir(): void
-    {
-        $this->form->fill([
-            'tanggal_mulai' => now()->subYear(), // Mengambil tanggal 1 tahun dari sekarang
-            'tanggal_selesai' => now(),          // Mengambil tanggal hari ini
-        ]);
-        $this->submit();
-    }
+    // --- AKHIR METODE BARU ---
 
 
-    // --- Widget Pendaftaran ---
     protected function getHeaderWidgets(): array
     {
-        return [LaporanStatsOverview::class];
+        return [
+            LaporanStatsOverview::class,
+        ];
     }
 
     protected function getFooterWidgets(): array
     {
-        return [LaporanTransaksiTable::class];
+        return [
+            LaporanTransaksiTable::class,
+        ];
     }
 }

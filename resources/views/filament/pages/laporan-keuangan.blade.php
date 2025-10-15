@@ -1,36 +1,34 @@
 <x-filament-panels::page>
-
-    {{-- Menampilkan form date picker --}}
+    {{-- Tampilkan form filter tanggal --}}
     <div class="mb-4">
         {{ $this->form }}
     </div>
 
-    {{-- Menampilkan tombol-tombol filter cepat --}}
-    <div class="flex items-center gap-2 mb-6">
-        <x-filament::button wire:click="setFilterHarian" color="gray">
+    {{-- [2] KONTENER UNTUK TOMBOL-TOMBOL FILTER CEPAT --}}
+    <div class="flex flex-wrap items-center gap-2 mb-6">
+        <span class="text-sm font-medium text-gray-700 dark:text-gray-200">Filter Cepat:</span>
+
+        <x-filament::button wire:click="setFilterHarian" color="gray" size="sm">
             Hari Ini
         </x-filament::button>
 
-        <x-filament::button wire:click="setFilterMingguan" color="gray">
+        <x-filament::button wire:click="setFilterMingguan" color="gray" size="sm">
             Minggu Ini
         </x-filament::button>
 
-        <x-filament::button wire:click="setFilterBulanan" color="gray">
+        <x-filament::button wire:click="setFilterBulanan" color="gray" size="sm">
             Bulan Ini
         </x-filament::button>
 
-        <x-filament::button wire:click="setFilterTahunan" color="gray">
+        <x-filament::button wire:click="setFilterTahunan" color="gray" size="sm">
             Tahun Ini
-        </x-filament::button>
-
-        <x-filament::button wire:click="setFilterSatuTahunTerakhir" color="gray">
-            1 Tahun Terakhir
         </x-filament::button>
     </div>
 
-    {{--
-        Widget akan otomatis ditampilkan oleh Filament di sini,
-        jadi Anda tidak perlu memanggilnya secara manual di view.
-    --}}
+    <div class="prose dark:prose-invert max-w-none">
+        <p>
+            Gunakan filter di atas untuk melihat ringkasan keuangan dan rincian transaksi pada periode yang Anda pilih.
+        </p>
+    </div>
 
 </x-filament-panels::page>

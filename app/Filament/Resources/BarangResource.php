@@ -16,8 +16,6 @@ class BarangResource extends Resource
 {
     protected static ?string $model = Barang::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-cube'; // Icon yang lebih sesuai
-
     protected static ?string $navigationGroup = 'Kelola Barang';
 
     public static function getEloquentQuery(): Builder
@@ -59,7 +57,6 @@ class BarangResource extends Resource
                     // Karena nilainya di-update otomatis oleh Distribusi & Transaksi
                     Forms\Components\TextInput::make('stok')
                         ->numeric()
-                        ->readOnly()
                         ->default(0)
                         ->helperText('Stok akan bertambah/berkurang otomatis saat ada distribusi atau transaksi.'),
 
@@ -76,7 +73,7 @@ class BarangResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('id')->sortable(),
                 Tables\Columns\TextColumn::make('nama_barang')->searchable(),
-                Tables\Columns\TextColumn::make('kategori.nama_kategori')->sortable(),
+                // Tables\Columns\TextColumn::make('kategori.nama_kategori')->sortable(),
                 Tables\Columns\TextColumn::make('latestDistribusi.agen.name')
                     ->label('Penyetor Terakhir')
                     ->default('Toko Hana')
@@ -93,7 +90,8 @@ class BarangResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->button(),
+                Tables\Actions\DeleteAction::make()->button(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

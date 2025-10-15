@@ -2,16 +2,15 @@
 
 namespace App\Filament\Widgets;
 
+use App\Models\Transaksi;
 use Filament\Tables;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Builder;
 
 class RiwayatTransaksiKaryawan extends BaseWidget
 {
-    protected static ?string $heading = 'Riwayat Transaksi Terakhir';
-
+    protected static ?string $heading = 'Riwayat Transaksi Terkini';
     protected int | string | array $columnSpan = 'full';
 
     public static function canView(): bool
@@ -20,34 +19,40 @@ class RiwayatTransaksiKaryawan extends BaseWidget
         return auth()->user()->hasRole('karyawan');
     }
 
+    // Listener untuk me-refresh tabel secara otomatis setelah ada data baru
+    protected $listeners = ['transaksiUpdated' => '$refresh'];
 
     public function table(Table $table): Table
     {
         return $table
+            // Kueri hanya akan mengambil transaksi yang dibuat oleh karyawan yang sedang login
             ->query(
-                // Query hanya mengambil transaksi milik user yang sedang login
-                \App\Models\Transaksi::query()->where('user_id', Auth::id())
+                Transaksi::query()->where('user_id', auth()->id())->latest()
             )
-            ->defaultSort('created_at', 'desc') // Urutkan berdasarkan terbaru
             ->columns([
-                TextColumn::make('user.name')
-                    ->label('Nama Karyawan')
-                    ->sortable()
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('tanggal_transaksi')
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('kategori.nama_kategori'),
-                Tables\Columns\TextColumn::make('jumlah')
-                    ->money('IDR'),
                 Tables\Columns\TextColumn::make('jenis')
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
+                    ->color(fn(string $state): string => match ($state) {
                         'pemasukan' => 'success',
                         'pengeluaran' => 'danger',
-                    }),
-                Tables\Columns\TextColumn::make('deskripsi')
-                    ->limit(30),
-            ]);
+                    })
+                    ->formatStateUsing(fn(string $state): string => ucfirst($state)),
+
+                // Menampilkan nama barang jika ini adalah pemasukan
+                Tables\Columns\TextColumn::make('barang.nama_barang')
+                    ->label('Detail')
+                    ->default(fn($record) => $record->deskripsi)
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('jumlah')
+                    ->label('Jumlah Uang')
+                    ->money('IDR')
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('tanggal_transaksi')
+                    ->date('d M Y')
+                    ->sortable(),
+            ])
+            ->defaultSort('created_at', 'desc');
     }
 }

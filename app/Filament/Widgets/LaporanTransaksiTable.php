@@ -3,29 +3,21 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Transaksi;
+use Carbon\Carbon;
 use Filament\Tables;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
-use Illuminate\Support\Arr;
-use Livewire\Attributes\On;
-use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
-use pxlrbt\FilamentExcel\Columns\Column;
-use pxlrbt\FilamentExcel\Exports\ExcelExport;
+use Illuminate\Database\Eloquent\Builder;
 
 class LaporanTransaksiTable extends BaseWidget
 {
-    protected static ?string $heading = 'Detail Transaksi';
-
-    // --- PERUBAHAN DI SINI: Tambahkan baris ini ---
+    protected static ?string $heading = 'Rincian Transaksi';
     protected int | string | array $columnSpan = 'full';
 
-    public ?array $filters = [];
-
-    #[On('updateLaporanFilter')]
-    public function updateFilters(array $filters): void
-    {
-        $this->filters = $filters;
-    }
+    // Properti untuk filter tanggal
+    public ?string $tanggalMulai = null;
+    public ?string $tanggalSelesai = null;
 
     public static function canView(): bool
     {
@@ -34,46 +26,46 @@ class LaporanTransaksiTable extends BaseWidget
         return auth()->user()->hasRole('pemilik');
     }
 
+    // Listener untuk event dari halaman Laporan Keuangan
+    protected $listeners = ['updateLaporanFilter' => 'applyDateFilter'];
+
+    public function mount(): void
+    {
+        $this->tanggalMulai = now()->startOfMonth()->toDateString();
+        $this->tanggalSelesai = now()->endOfMonth()->toDateString();
+    }
+
+    public function applyDateFilter(array $filters): void
+    {
+        $this->tanggalMulai = $filters['tanggal_mulai'] ?? $this->tanggalMulai;
+        $this->tanggalSelesai = $filters['tanggal_selesai'] ?? $this->tanggalSelesai;
+    }
+
     public function table(Table $table): Table
     {
-        $filters = $this->filters;
-        $tanggalMulai = Arr::get($filters, 'tanggal_mulai', 'awal');
-        $tanggalSelesai = Arr::get($filters, 'tanggal_selesai', 'akhir');
-        $fileName = "laporan-keuangan-{$tanggalMulai}-sampai-{$tanggalSelesai}";
-
         return $table
             ->query(
                 Transaksi::query()
-                    ->when($tanggalMulai, fn($q) => $q->whereDate('tanggal_transaksi', '>=', $tanggalMulai))
-                    ->when($tanggalSelesai, fn($q) => $q->whereDate('tanggal_transaksi', '<=', $tanggalSelesai))
+                    ->when($this->tanggalMulai, fn($q) => $q->whereDate('tanggal_transaksi', '>=', Carbon::parse($this->tanggalMulai)))
+                    ->when($this->tanggalSelesai, fn($q) => $q->whereDate('tanggal_transaksi', '<=', Carbon::parse($this->tanggalSelesai)))
             )
-            ->headerActions([
-                ExportAction::make()
-                    ->label('Export Excel')
-                    ->exports([
-                        ExcelExport::make()
-                            ->fromTable()
-                            ->withFilename($fileName)
-                            ->withColumns([
-                                Column::make('tanggal_transaksi')->heading('Tanggal Transaksi'),
-                                Column::make('jenis')->heading('Jenis'),
-                                Column::make('kategori.nama_kategori')->heading('Kategori'),
-                                Column::make('jumlah')->heading('Jumlah'),
-                                Column::make('deskripsi')->heading('Deskripsi'),
-                                Column::make('user.name')->heading('Dicatat Oleh'),
-                            ])
-                    ])
-            ])
             ->defaultSort('tanggal_transaksi', 'desc')
             ->columns([
-                Tables\Columns\TextColumn::make('tanggal_transaksi')->date()->label('Tanggal'),
-                Tables\Columns\TextColumn::make('kategori.nama_kategori')->label('Kategori'),
-                Tables\Columns\TextColumn::make('deskripsi'),
-                Tables\Columns\TextColumn::make('jenis')->badge()->color(fn(string $state) => match($state){
-                    'pemasukan' => 'success',
-                    'pengeluaran' => 'danger'
-                }),
-                Tables\Columns\TextColumn::make('jumlah')->money('IDR')->alignEnd(),
+                Tables\Columns\TextColumn::make('jenis')
+                    ->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        'pemasukan' => 'success',
+                        'pengeluaran' => 'danger',
+                    })
+                    ->formatStateUsing(fn(string $state): string => ucfirst($state)),
+                Tables\Columns\TextColumn::make('deskripsi')->searchable(),
+                Tables\Columns\TextColumn::make('jumlah')->money('IDR')->sortable(),
+                Tables\Columns\TextColumn::make('user.name')->label('Dicatat Oleh')->sortable(),
+                Tables\Columns\TextColumn::make('tanggal_transaksi')->date('d M Y')->sortable(),
+            ])
+            ->filters([
+                SelectFilter::make('jenis')->options(['pemasukan' => 'Pemasukan', 'pengeluaran' => 'Pengeluaran']),
+                SelectFilter::make('user_id')->label('Dicatat Oleh')->relationship('user', 'name')->searchable()->preload(),
             ]);
     }
 }

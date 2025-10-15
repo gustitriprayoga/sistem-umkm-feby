@@ -111,7 +111,13 @@ class SetorBarangAgen extends Page
         ];
     }
 
+    // Mendaftarkan widget riwayat transaksi
     protected function getHeaderWidgets(): array
+    {
+        return [];
+    }
+
+    protected function getFooterWidgets(): array
     {
         return [
             RiwayatSetoranAgen::class,
