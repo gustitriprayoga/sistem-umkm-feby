@@ -2,34 +2,49 @@
 
 namespace Database\Seeders;
 
-use App\Models\Kategori;
+use App\Models\Barang;
 use App\Models\Transaksi;
 use App\Models\User;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Faker\Factory as Faker;
 
 class TransaksiSeeder extends Seeder
 {
     /**
-     * Jalankan seeder database.
+     * Run the database seeds.
      */
     public function run(): void
     {
-        $faker = Faker::create('id_ID'); // Menggunakan data Faker Indonesia
+        $userIds = User::pluck('id');
 
-        // Ambil ID Karyawan dan Kategori
-        $userIds = User::whereHas('roles', fn ($query) => $query->where('name', 'Karyawan'))->pluck('id');
-        $kategoriIds = Kategori::pluck('id');
+        // Buat 30 transaksi pengeluaran (barang keluar/penjualan)
+        for ($i = 0; $i < 30; $i++) {
+            // Ambil barang yang punya stok saja
+            $barang = Barang::where('stok', '>', 0)->inRandomOrder()->first();
 
-        for ($i = 0; $i < 100; $i++) { // Membuat 100 data transaksi
+            // Jika tidak ada barang yang punya stok, hentikan seeder
+            if (!$barang) {
+                $this->command->info('Semua barang habis, seeder transaksi berhenti.');
+                break;
+            }
+
+            // Jumlah jual tidak boleh lebih dari stok
+            $jumlahJual = rand(1, min($barang->stok, 10)); // Jual antara 1-10 barang, tapi tidak lebih dari stok
+            $totalHarga = $barang->harga * $jumlahJual;
+
             Transaksi::create([
-                'user_id' => $faker->randomElement($userIds),
-                'kategori_id' => $faker->randomElement($kategoriIds),
-                'tanggal_transaksi' => $faker->dateTimeBetween('-1 year', 'now'),
-                'jumlah' => $faker->numberBetween(10000, 500000),
-                'jenis' => $faker->randomElement(['pemasukan', 'pengeluaran']),
-                'deskripsi' => $faker->sentence(3),
+                'user_id' => $userIds->random(),
+                'kategori_id' => $barang->kategori_id,
+                'barang_id' => $barang->id,
+                'jumlah_barang' => $jumlahJual,
+                'tanggal_transaksi' => now()->subDays(rand(1, 15)),
+                'jumlah' => $totalHarga,
+                'jenis' => 'pengeluaran',
+                'deskripsi' => 'Penjualan ' . $barang->nama_barang,
             ]);
+
+            // --- LOGIKA PENTING: KURANGI STOK ---
+            $barang->decrement('stok', $jumlahJual);
         }
     }
 }

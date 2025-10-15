@@ -38,6 +38,9 @@ class DashboardPanelProvider extends PanelProvider
                 NavigationGroup::make()
                     ->label('Laporan')
                     ->icon('heroicon-o-chart-bar'),
+                NavigationGroup::make()
+                    ->label('Kelola User')
+                    ->icon('heroicon-o-users'),
             ])
             ->login()
             ->colors([

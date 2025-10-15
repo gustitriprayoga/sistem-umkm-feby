@@ -16,8 +16,9 @@ class DatabaseSeeder extends Seeder
             RolesAndPermissionsSeeder::class,
             UserSeeder::class,
             KategoriSeeder::class,
-            TransaksiSeeder::class,
-            DistribusiSeeder::class,
+            BarangSeeder::class, // <-- TAMBAHKAN INI
+            DistribusiSeeder::class, // Ini untuk barang masuk
+            TransaksiSeeder::class,  // Ini untuk barang keluar
         ]);
     }
 }

@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Distribusi;
+use App\Observers\DistribusiObserver; // <-- Import observer
+
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -18,6 +21,10 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+    ];
+
+    protected $observers = [
+        Distribusi::class => [DistribusiObserver::class], // <-- TAMBAHKAN BARIS INI
     ];
 
     /**

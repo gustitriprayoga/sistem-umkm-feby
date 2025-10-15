@@ -13,13 +13,18 @@ return new class extends Migration
     {
         Schema::create('transaksis', function (Blueprint $table) {
             $table->id();
-            // Menghubungkan ke tabel 'users' untuk mencatat siapa yang menginput
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            // Menghubungkan ke tabel 'kategori'
             $table->foreignId('kategori_id')->constrained('kategoris')->onDelete('cascade');
+
+            // --- TAMBAHAN PENTING ---
+            // Menghubungkan ke barang spesifik (nullable jika transaksi tidak terkait barang)
+            $table->foreignId('barang_id')->nullable()->constrained('barangs')->onDelete('set null');
+            $table->integer('jumlah_barang')->nullable()->comment('Jumlah barang yg keluar/terjual');
+            // ------------------------
+
             $table->date('tanggal_transaksi');
-            $table->decimal('jumlah', 15, 2); // Jumlah uang
-            $table->enum('jenis', ['pemasukan', 'pengeluaran']); // Jenis transaksi
+            $table->decimal('jumlah', 15, 2); // Jumlah uang (total harga penjualan)
+            $table->enum('jenis', ['pemasukan', 'pengeluaran']);
             $table->text('deskripsi')->nullable();
             $table->timestamps();
         });

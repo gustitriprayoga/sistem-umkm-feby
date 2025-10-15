@@ -2,33 +2,45 @@
 
 namespace Database\Seeders;
 
+use App\Models\Barang;
+use App\Models\Distribus;
 use App\Models\Distribusi;
 use App\Models\User;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Faker\Factory as Faker;
 
 class DistribusiSeeder extends Seeder
 {
     /**
-     * Jalankan seeder database.
+     * Run the database seeds.
      */
     public function run(): void
     {
-        // $faker = Faker::create('id_ID');
+        $agenIds = User::pluck('id');
+        $barangs = Barang::all();
 
-        // // Ambil semua ID user dengan role 'Agen'
-        // $agenIds = User::whereHas('roles', fn ($query) => $query->where('name', 'Agen'))->pluck('id');
+        if ($agenIds->isEmpty() || $barangs->isEmpty()) {
+            $this->command->info('Tidak ada User (agen) atau Barang ditemukan.');
+            return;
+        }
 
-        // $daftarBarang = ['Beras 5kg', 'Minyak Goreng 2L', 'Gula Pasir 1kg', 'Kopi Sachet', 'Mie Instan Dus'];
+        // Buat 20 data distribusi (barang masuk)
+        for ($i = 0; $i < 20; $i++) {
+            $barang = $barangs->random();
+            $jumlahMasuk = rand(10, 50); // Jumlah barang yang masuk antara 10 - 50
 
-        // for ($i = 0; $i < 50; $i++) { // Membuat 50 data distribusi
-        //     Distribusi::create([
-        //         'agen_id' => $faker->randomElement($agenIds),
-        //         'nama_barang' => $faker->randomElement($daftarBarang),
-        //         'jumlah_barang' => $faker->numberBetween(5, 50),
-        //         'tanggal_setor' => $faker->dateTimeBetween('-6 months', 'now'),
-        //         'keterangan' => 'Setoran rutin',
-        //     ]);
-        // }
+            Distribusi::create([
+                'agen_id' => $agenIds->random(),
+                'barang_id' => $barang->id,
+                'jumlah_barang' => $jumlahMasuk,
+                'harga_satuan' => $barang->harga,
+                'total_harga' => $barang->harga * $jumlahMasuk,
+                'tanggal_setor' => now()->subDays(rand(1, 30)),
+                'keterangan' => 'Stok masuk dari seeder.',
+            ]);
+
+            // --- LOGIKA PENTING: TAMBAHKAN STOK ---
+            $barang->increment('stok', $jumlahMasuk);
+        }
     }
 }

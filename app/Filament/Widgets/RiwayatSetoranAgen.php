@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Models\Distribusi;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -10,39 +11,44 @@ use Illuminate\Support\Facades\Auth;
 
 class RiwayatSetoranAgen extends BaseWidget
 {
-    protected static ?string $heading = 'Riwayat Setoran Agen';
-
-    protected int | string | array $columnSpan = 'full';
-
     public static function canView(): bool
     {
         // Widget ini hanya bisa dilihat oleh Karyawan
         return auth()->user()->hasRole('agen');
     }
 
+    protected static ?string $heading = 'Riwayat Setoran Saya';
+
+    protected int | string | array $columnSpan = 'full';
+
+    // [1] Tambahkan listener untuk me-refresh tabel
+    protected $listeners = ['setoranUpdated' => '$refresh'];
+
     public function table(Table $table): Table
     {
         return $table
+            // [2] INI BAGIAN PALING PENTING: Filter data hanya untuk user yang login
             ->query(
-                // Query hanya mengambil data distribusi milik Agen yang sedang login
-                \App\Models\Distribusi::query()->where('agen_id', Auth::id())
+                Distribusi::query()->where('agen_id', auth()->id())->latest('tanggal_setor')
             )
-            ->defaultSort('created_at', 'desc') // Urutkan berdasarkan terbaru
             ->columns([
-                TextColumn::make('user.name')
-                    ->label('Nama Agen')
-                    ->sortable()
-                    ->searchable(),
-
-                Tables\Columns\TextColumn::make('nama_barang')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('jumlah_barang')
-                    ->label('Jumlah'),
-                Tables\Columns\TextColumn::make('tanggal_setor')
-                    ->date()
+                Tables\Columns\TextColumn::make('barang.nama_barang')
+                    ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('keterangan')
-                    ->limit(40),
+                Tables\Columns\TextColumn::make('jumlah_barang')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('total_harga')
+                    ->money('IDR')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('tanggal_setor')
+                    ->date('d M Y')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Waktu Dibuat')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ]);
     }
 }

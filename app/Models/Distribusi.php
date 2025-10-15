@@ -16,6 +16,15 @@ class Distribusi extends Model
         return $this->belongsTo(User::class, 'agen_id');
     }
 
+
+    public function barang()
+    {
+        return $this->belongsTo(Barang::class, 'barang_id');
+    }
+
+    /**
+     * Pastikan juga relasi 'agen' ada untuk pemanggilan lain
+     */
     public function agen()
     {
         return $this->belongsTo(User::class, 'agen_id');
