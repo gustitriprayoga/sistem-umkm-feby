@@ -28,8 +28,8 @@ class LaporanKeuangan extends Page implements HasForms
 
     public function mount(): void
     {
-        // Set default ke bulan ini saat halaman dimuat
-        $this->setFilterBulanan();
+        // PERUBAHAN: Set default ke satu tahun terakhir saat halaman dimuat
+        $this->setFilterSatuTahunTerakhir();
     }
 
     public function form(Form $form): Form
@@ -41,9 +41,15 @@ class LaporanKeuangan extends Page implements HasForms
                     ->columns(2)
                     ->schema([
                         DatePicker::make('tanggal_mulai')
-                            ->label('Dari Tanggal'),
+                            ->label('Dari Tanggal')
+                            // TAMBAHAN: Buat date picker bereaksi langsung saat diubah
+                            ->live()
+                            ->afterStateUpdated(fn() => $this->submit()),
                         DatePicker::make('tanggal_selesai')
-                            ->label('Sampai Tanggal'),
+                            ->label('Sampai Tanggal')
+                            // TAMBAHAN: Buat date picker bereaksi langsung saat diubah
+                            ->live()
+                            ->afterStateUpdated(fn() => $this->submit()),
                     ]),
             ]);
     }
@@ -91,6 +97,17 @@ class LaporanKeuangan extends Page implements HasForms
         ]);
         $this->submit();
     }
+
+    // PERUBAHAN BARU: Tambahkan metode ini untuk filter 1 tahun terakhir
+    public function setFilterSatuTahunTerakhir(): void
+    {
+        $this->form->fill([
+            'tanggal_mulai' => now()->subYear(), // Mengambil tanggal 1 tahun dari sekarang
+            'tanggal_selesai' => now(),          // Mengambil tanggal hari ini
+        ]);
+        $this->submit();
+    }
+
 
     // --- Widget Pendaftaran ---
     protected function getHeaderWidgets(): array

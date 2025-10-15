@@ -17,6 +17,8 @@ return new class extends Migration
             $table->foreignId('agen_id')->constrained('users')->onDelete('cascade');
             $table->string('nama_barang');
             $table->integer('jumlah_barang');
+            $table->interger('harga_satuan')->nullable();
+            $table->interger('total_harga')->nullable();
             $table->date('tanggal_setor');
             $table->text('keterangan')->nullable();
             $table->timestamps();;

@@ -11,6 +11,7 @@ use Livewire\Attributes\On;
 
 class LaporanStatsOverview extends BaseWidget
 {
+
     // PERUBAHAN: Tambahkan properti untuk menyimpan filter
     public ?array $filters = [];
 
@@ -19,6 +20,13 @@ class LaporanStatsOverview extends BaseWidget
     public function updateFilters(array $filters): void
     {
         $this->filters = $filters;
+    }
+
+    public static function canView(): bool
+    {
+        // Hanya izinkan pengguna dengan role 'pemilik' yang bisa melihat widget ini.
+        // Pastikan nama role 'pemilik' sudah sesuai dengan yang ada di database Anda.
+        return auth()->user()->hasRole('pemilik');
     }
 
     protected function getStats(): array

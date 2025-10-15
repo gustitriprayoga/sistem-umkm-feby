@@ -40,6 +40,7 @@ class DistribusiResource extends Resource
                     ->numeric(),
                 Forms\Components\DatePicker::make('tanggal_setor')
                     ->required(),
+                
                 Forms\Components\Textarea::make('keterangan')
                     ->columnSpanFull(),
             ]);

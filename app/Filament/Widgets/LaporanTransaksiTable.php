@@ -27,6 +27,13 @@ class LaporanTransaksiTable extends BaseWidget
         $this->filters = $filters;
     }
 
+    public static function canView(): bool
+    {
+        // Hanya izinkan pengguna dengan role 'pemilik' yang bisa melihat widget ini.
+        // Pastikan nama role 'pemilik' sudah sesuai dengan yang ada di database Anda.
+        return auth()->user()->hasRole('pemilik');
+    }
+
     public function table(Table $table): Table
     {
         $filters = $this->filters;

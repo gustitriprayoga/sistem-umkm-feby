@@ -1,30 +1,36 @@
 <x-filament-panels::page>
-    <form wire:submit="submit">
-        {{-- Form filter tanggal kustom --}}
+
+    {{-- Menampilkan form date picker --}}
+    <div class="mb-4">
         {{ $this->form }}
+    </div>
 
-        {{-- Grup Tombol --}}
-        <div class="mt-6 flex flex-wrap gap-2 items-center">
+    {{-- Menampilkan tombol-tombol filter cepat --}}
+    <div class="flex items-center gap-2 mb-6">
+        <x-filament::button wire:click="setFilterHarian" color="gray">
+            Hari Ini
+        </x-filament::button>
 
-            {{-- Tombol untuk menerapkan filter kustom --}}
-            <x-filament::button type="submit">
-                Terapkan Filter
-            </x-filament::button>
+        <x-filament::button wire:click="setFilterMingguan" color="gray">
+            Minggu Ini
+        </x-filament::button>
 
-            {{-- Tombol untuk filter cepat --}}
-            <x-filament::button wire:click="setFilterHarian" color="gray">
-                Hari Ini
-            </x-filament::button>
-            <x-filament::button wire:click="setFilterMingguan" color="gray">
-                Minggu Ini
-            </x-filament::button>
-            <x-filament::button wire:click="setFilterBulanan" color="gray">
-                Bulan Ini
-            </x-filament::button>
-            <x-filament::button wire:click="setFilterTahunan" color="gray">
-                Tahun Ini
-            </x-filament::button>
+        <x-filament::button wire:click="setFilterBulanan" color="gray">
+            Bulan Ini
+        </x-filament::button>
 
-        </div>
-    </form>
+        <x-filament::button wire:click="setFilterTahunan" color="gray">
+            Tahun Ini
+        </x-filament::button>
+
+        <x-filament::button wire:click="setFilterSatuTahunTerakhir" color="gray">
+            1 Tahun Terakhir
+        </x-filament::button>
+    </div>
+
+    {{--
+        Widget akan otomatis ditampilkan oleh Filament di sini,
+        jadi Anda tidak perlu memanggilnya secara manual di view.
+    --}}
+
 </x-filament-panels::page>
