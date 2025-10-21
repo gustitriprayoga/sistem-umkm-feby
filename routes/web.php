@@ -13,6 +13,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->to(config('filament.path', 'dashboard'));
+});
+
+Route::get('/admin/login', function () {
+    return redirect()->to(config('filament.path', 'dashboard'));
 });
