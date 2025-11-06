@@ -30,15 +30,7 @@ class TransaksiResource extends Resource
         return auth()->user()->hasRole(['pemilik']);
     }
 
-    public static function canEdit($record): bool
-    {
-        return auth()->user()->hasRole(['pemilik']);
-    }
 
-    public static function canDeleteAny(): bool
-    {
-        return auth()->user()->hasRole(['pemilik']);
-    }
 
     public static function form(Form $form): Form
     {
