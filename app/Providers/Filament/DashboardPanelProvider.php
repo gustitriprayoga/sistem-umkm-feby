@@ -27,7 +27,7 @@ class DashboardPanelProvider extends PanelProvider
             ->default()
             ->id('dashboard')
             ->path('dashboard')
-            ->brandName('UMKM Hana')
+            ->brandName('UMKM HANA')
             ->navigationGroups([
                 NavigationGroup::make()
                     ->label('Kelola Pesanan')
