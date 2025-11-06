@@ -31,7 +31,7 @@ class DashboardPanelProvider extends PanelProvider
             ->navigationGroups([
                 NavigationGroup::make()
                     ->label('Kelola Pesanan')
-                    ->icon('heroicon-o-cube'),
+                    ->icon('heroicon-o-shopping-cart'),
                 NavigationGroup::make()
                     ->label('Kelola Barang')
                     ->icon('heroicon-o-cube'),
