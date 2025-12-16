@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PermintaanPembelianResource\Pages;
 use App\Models\PermintaanPembelian;
+use App\Models\DetailPermintaanPembelian; // Pastikan Model ini di-import
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -12,8 +13,8 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Auth;
-use Filament\Forms\Components\ToggleButtons; // Pastikan ini ada
+use Filament\Forms\Components\ToggleButtons;
+use Filament\Notifications\Notification;
 
 class PermintaanPembelianResource extends Resource
 {
@@ -23,6 +24,7 @@ class PermintaanPembelianResource extends Resource
 
     protected static ?string $label = 'Request Pembelian';
 
+    // Filter Query: Agen hanya melihat datanya sendiri
     public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery();
@@ -34,6 +36,7 @@ class PermintaanPembelianResource extends Resource
         return $query;
     }
 
+    // FORM UTAMA (Tampilan saat Create / Edit / View oleh Admin)
     public static function form(Form $form): Form
     {
         return $form
@@ -45,10 +48,13 @@ class PermintaanPembelianResource extends Resource
                             ->label('Request ke Agen (Pemasok)')
                             ->options(User::whereHas('roles', fn($q) => $q->where('name', 'agen'))->pluck('name', 'id'))
                             ->searchable()
-                            ->required(),
+                            ->required()
+                            ->disabled(fn($record) => $record && $record->status !== 'diminta'), // Kunci jika sudah diproses
+
                         Forms\Components\DatePicker::make('tanggal_permintaan')
                             ->default(now())
-                            ->required(),
+                            ->required()
+                            ->disabled(fn($record) => $record && $record->status !== 'diminta'),
                     ]),
 
                 Forms\Components\Section::make('Daftar Barang yang Diminta')
@@ -58,38 +64,91 @@ class PermintaanPembelianResource extends Resource
                             ->label('Item Barang')
                             ->columns(3)
                             ->schema([
+                                // --- KOLOM INPUT ASLI (Admin) ---
                                 Forms\Components\TextInput::make('nama_barang')
-                                    ->required(),
+                                    ->required()
+                                    ->disabled(fn($record) => $record && $record->permintaanPembelian->status !== 'diminta'),
+
                                 Forms\Components\TextInput::make('jumlah')
                                     ->numeric()
-                                    ->required(),
+                                    ->required()
+                                    ->disabled(fn($record) => $record && $record->permintaanPembelian->status !== 'diminta'),
+
                                 Forms\Components\TextInput::make('satuan')
                                     ->required()
-                                    ->placeholder('Contoh: kg, box, liter'),
-                            ])
-                            ->columnSpanFull()
-                            ->defaultItems(1),
+                                    ->placeholder('Contoh: kg, box, liter')
+                                    ->disabled(fn($record) => $record && $record->permintaanPembelian->status !== 'diminta'),
+
+                                // --- KOLOM HASIL VALIDASI (TAMPILAN READ-ONLY UNTUK ADMIN) ---
+                                // Group ini hanya muncul jika status request bukan lagi 'diminta' (sudah diproses agen)
+                                Forms\Components\Group::make([
+                                    ToggleButtons::make('status_barang')
+                                        ->label('Respon Agen')
+                                        ->options([
+                                            'diajukan' => 'Menunggu',
+                                            'ada' => 'Ada / Tersedia',
+                                            'kosong' => 'Kosong / Ditolak',
+                                        ])
+                                        ->colors([
+                                            'diajukan' => 'gray',
+                                            'ada' => 'success',
+                                            'kosong' => 'danger',
+                                        ])
+                                        ->icons([
+                                            'diajukan' => 'heroicon-o-clock',
+                                            'ada' => 'heroicon-o-check-circle',
+                                            'kosong' => 'heroicon-o-x-circle',
+                                        ])
+                                        ->inline()
+                                        ->default('diajukan')
+                                        ->disabled() // Admin & Agen di view ini hanya Read-Only
+                                        ->dehydrated(false),
+
+                                    Forms\Components\TextInput::make('catatan_barang')
+                                        ->label('Alasan Penolakan')
+                                        ->disabled()
+                                        ->dehydrated(false)
+                                        ->visible(fn(Get $get) => $get('status_barang') === 'kosong'),
+                                ])
+                                    ->columnSpanFull()
+                                    // Logika Visible: Tampil jika record ada DAN status utamanya bukan 'diminta'
+                                    ->visible(
+                                        fn($record) =>
+                                        $record &&
+                                            $record->permintaanPembelian &&
+                                            $record->permintaanPembelian->status !== 'diminta'
+                                    ),
+                            ]),
                     ]),
 
-                Forms\Components\Textarea::make('catatan_admin')
-                    ->label('Catatan untuk Agen')
-                    ->columnSpanFull(),
+                Forms\Components\Section::make('Catatan Akhir')
+                    ->schema([
+                        Forms\Components\Textarea::make('catatan_admin')
+                            ->label('Catatan Awal (Dari Admin)')
+                            ->columnSpanFull()
+                            ->disabled(fn($record) => $record && $record->status !== 'diminta'),
+
+                        Forms\Components\Textarea::make('catatan_agen')
+                            ->label('Balasan / Catatan dari Agen')
+                            ->columnSpanFull()
+                            ->disabled() // Read Only di form utama
+                            ->visible(fn($record) => ($record && $record->catatan_agen) || ($record && $record->status !== 'diminta')),
+                    ]),
             ]);
     }
 
+    // TABLE UTAMA
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
-                    ->label('ID Request')
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('id')->sortable(),
                 Tables\Columns\TextColumn::make('agen.name')
                     ->label('Agen Pemasok')
                     ->searchable()
-                    ->hidden(fn() => auth()->user()->hasRole('agen')),
+                    ->hidden(fn() => auth()->user()->hasRole('agen')), // Sembunyikan kolom agen bagi si agen sendiri
                 Tables\Columns\TextColumn::make('admin.name')
-                    ->label('Dibuat Oleh (Admin)')
+                    ->label('Dibuat Oleh')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('tanggal_permintaan')
                     ->date('d M Y')
@@ -105,93 +164,91 @@ class PermintaanPembelianResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('catatan_agen')
                     ->label('Catatan Agen')
-                    ->limit(30)
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->limit(30),
             ])
             ->defaultSort('tanggal_permintaan', 'desc')
             ->actions([
-                // AKSI UNTUK ADMIN
-                Tables\Actions\EditAction::make()
-                    ->visible(fn($record) => auth()->user()->can('update_permintaan::pembelian', $record)),
+                // 1. TOMBOL LIHAT (Untuk melihat detail request & respon agen)
+                Tables\Actions\ViewAction::make()
+                    ->label('Lihat Detail'),
 
-                // AKSI UNTUK AGEN: VALIDASI STOK PER BARANG
+                // 2. TOMBOL EDIT (Hanya Admin, jika status masih 'diminta')
+                Tables\Actions\EditAction::make()
+                    ->visible(fn($record) => auth()->user()->can('update_permintaan::pembelian', $record) && $record->status === 'diminta'),
+
+                // 3. TOMBOL PROSES (KHUSUS AGEN - INI LOGIKA VALIDASINYA)
                 Tables\Actions\Action::make('updateStatus')
                     ->label('Proses / Validasi Stok')
                     ->icon('heroicon-o-clipboard-document-check')
                     ->color('primary')
-                    // 1. SAAT TOMBOL DITEKAN: Ambil data barang (details) dari database ke dalam form
+                    // A. LOAD DATA SAAT MODAL DIBUKA
                     ->mountUsing(function (Forms\ComponentContainer $form, PermintaanPembelian $record) {
                         $form->fill([
                             'status' => $record->status,
                             'catatan_agen' => $record->catatan_agen,
-                            // Kita load data 'details' agar muncul di Repeater
+                            // Load detail barang ke repeater sementara 'details_review'
                             'details_review' => $record->details->map(function ($item) {
                                 return [
-                                    'id' => $item->id, // PENTING: ID untuk update nanti
+                                    'id' => $item->id,
                                     'nama_barang' => $item->nama_barang,
                                     'jumlah' => $item->jumlah,
                                     'satuan' => $item->satuan,
-                                    'status_barang' => $item->status_barang,
+                                    'status_barang' => $item->status_barang ?? 'diajukan', // Default agar tidak error
                                     'catatan_barang' => $item->catatan_barang,
                                 ];
                             })->toArray(),
                         ]);
                     })
+                    // B. DEFINISI FORM DALAM MODAL
                     ->form([
                         Forms\Components\Section::make('Validasi Ketersediaan Barang')
                             ->schema([
-                                // 2. REPEATER KHUSUS UNTUK REVIEW (Tidak bisa tambah/hapus baris)
                                 Forms\Components\Repeater::make('details_review')
                                     ->label('Daftar Permintaan Barang')
                                     ->schema([
-                                        // Hidden ID untuk referensi update
+                                        // Hidden ID sangat penting untuk referensi update nanti
                                         Forms\Components\Hidden::make('id'),
 
-                                        // Info Barang (Disabled / Read Only)
+                                        // Info Barang (Read Only)
                                         Forms\Components\Group::make([
-                                            Forms\Components\TextInput::make('nama_barang')
-                                                ->disabled()
-                                                ->dehydrated(false),
-                                            Forms\Components\TextInput::make('jumlah')
-                                                ->label('Qty')
-                                                ->disabled()
-                                                ->inlineLabel()
-                                                ->suffix(fn($get) => $get('satuan'))
-                                                ->dehydrated(false),
+                                            Forms\Components\TextInput::make('nama_barang')->disabled()->dehydrated(false),
+                                            Forms\Components\TextInput::make('jumlah')->disabled()->inlineLabel()->suffix(fn($get) => $get('satuan'))->dehydrated(false),
                                         ])->columns(2),
 
-                                        // Input Status Agen
+                                        // Input Validasi Agen
                                         Forms\Components\Group::make([
-                                            // MENGGUNAKAN TOGGLE BUTTONS (FIX ERROR SELECT::COLORS)
                                             ToggleButtons::make('status_barang')
                                                 ->label('Ketersediaan')
                                                 ->options([
+                                                    'diajukan' => 'Menunggu',
                                                     'ada' => 'Ada',
                                                     'kosong' => 'Kosong',
                                                 ])
                                                 ->colors([
+                                                    'diajukan' => 'gray',
                                                     'ada' => 'success',
                                                     'kosong' => 'danger',
                                                 ])
                                                 ->icons([
+                                                    'diajukan' => 'heroicon-o-clock',
                                                     'ada' => 'heroicon-o-check',
                                                     'kosong' => 'heroicon-o-x-mark',
                                                 ])
                                                 ->inline()
                                                 ->default('diajukan')
                                                 ->required()
-                                                ->live(),
+                                                ->live(), // Wajib Live
 
                                             Forms\Components\TextInput::make('catatan_barang')
-                                                ->label('Alasan (Jika Kosong)')
-                                                ->placeholder('Stok habis / Discontinue')
-                                                ->visible(fn(Forms\Get $get) => $get('status_barang') === 'kosong')
-                                                ->required(fn(Forms\Get $get) => $get('status_barang') === 'kosong'),
+                                                ->label('Alasan (Wajib jika Kosong)')
+                                                ->placeholder('Contoh: Stok habis')
+                                                ->visible(fn(Get $get) => $get('status_barang') === 'kosong')
+                                                ->required(fn(Get $get) => $get('status_barang') === 'kosong'),
                                         ])->columns(1),
                                     ])
-                                    ->addable(false)
-                                    ->deletable(false)
-                                    ->reorderable(false)
+                                    ->addable(false)     // Agen tidak boleh nambah barang
+                                    ->deletable(false)   // Agen tidak boleh hapus barang
+                                    ->reorderable(false) // Agen tidak boleh ubah urutan
                                     ->columns(1)
                             ]),
 
@@ -200,41 +257,52 @@ class PermintaanPembelianResource extends Resource
                                 Forms\Components\Select::make('status')
                                     ->label('Update Status Keseluruhan')
                                     ->options([
-                                        'diproses'   => 'Diproses (Sebagian/Semua Ada)',
-                                        'selesai'    => 'Selesai (Barang Dikirim)',
-                                        'dibatalkan' => 'Tolak Semua (Batalkan Order)',
+                                        'diproses' => 'Diproses',
+                                        'selesai' => 'Selesai',
+                                        'dibatalkan' => 'Tolak Semua',
                                     ])
                                     ->required(),
-
                                 Forms\Components\Textarea::make('catatan_agen')
-                                    ->label('Catatan Tambahan (Opsional)')
+                                    ->label('Catatan Tambahan'),
                             ])
                     ])
-                    // 3. LOGIKA PENYIMPANAN DATA
+                    // C. EKSEKUSI PENYIMPANAN DATA
                     ->action(function (PermintaanPembelian $record, array $data) {
-                        // A. Update Status Utama
+                        // 1. Update Status Utama
                         $record->update([
                             'status' => $data['status'],
-                            'catatan_agen' => $data['catatan_agen'],
+                            'catatan_agen' => $data['catatan_agen'] ?? null,
                         ]);
 
-                        // B. Loop dan Update Status PER ITEM
-                        foreach ($data['details_review'] as $itemData) {
-                            $detail = \App\Models\DetailPermintaanPembelian::find($itemData['id']);
+                        // 2. Loop dan Update Detail Barang
+                        if (!empty($data['details_review'])) {
+                            foreach ($data['details_review'] as $itemData) {
+                                // Pastikan ID ada
+                                if (!empty($itemData['id'])) {
+                                    $detail = DetailPermintaanPembelian::find($itemData['id']);
 
-                            if ($detail) {
-                                $detail->update([
-                                    'status_barang' => $itemData['status_barang'],
-                                    'catatan_barang' => $itemData['catatan_barang'] ?? null,
-                                ]);
+                                    if ($detail) {
+                                        // Reset catatan jadi null jika status berubah jadi 'ada'/'diajukan'
+                                        $catatan = ($itemData['status_barang'] === 'kosong')
+                                            ? ($itemData['catatan_barang'] ?? null)
+                                            : null;
+
+                                        // Update ke database
+                                        $detail->update([
+                                            'status_barang' => $itemData['status_barang'],
+                                            'catatan_barang' => $catatan,
+                                        ]);
+                                    }
+                                }
                             }
                         }
 
-                        \Filament\Notifications\Notification::make()
-                            ->title('Validasi stok berhasil disimpan')
+                        Notification::make()
+                            ->title('Validasi berhasil disimpan')
                             ->success()
                             ->send();
                     })
+                    // Tombol ini hanya muncul untuk role 'agen'
                     ->visible(fn() => auth()->user()->hasRole('agen')),
             ]);
     }

@@ -10,7 +10,7 @@ class DetailPermintaanPembelian extends Model
 {
     use HasFactory;
     protected $table = 'detail_permintaan_pembelian';
-    protected $fillable = ['permintaan_pembelian_id', 'nama_barang', 'jumlah', 'satuan'];
+    protected $fillable = ['permintaan_pembelian_id', 'nama_barang', 'jumlah', 'satuan', 'status_barang', 'catatan_barang'];
 
     public function permintaanPembelian(): BelongsTo
     {
