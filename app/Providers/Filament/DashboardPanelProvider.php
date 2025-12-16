@@ -48,6 +48,9 @@ class DashboardPanelProvider extends PanelProvider
                 NavigationGroup::make()
                     ->label('Kelola User')
                     ->icon('heroicon-o-users'),
+                // NavigationGroup::make()
+                //     ->label('Setor Barang')
+                //     ->icon('heroicon-o-truck'),
             ])
             ->login()
             ->colors([

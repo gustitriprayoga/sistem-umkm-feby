@@ -18,6 +18,7 @@ class SetorBarangAgen extends Page
     protected static ?string $navigationIcon = 'heroicon-o-inbox-arrow-down';
     protected static string $view = 'filament.pages.setor-barang-agen';
     protected static ?string $title = 'Setor Barang';
+    // protected static ?string $group = 'Distribusi';
     protected static ?int $navigationSort = 2;
 
     public static function canAccess(): bool

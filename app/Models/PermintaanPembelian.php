@@ -11,7 +11,8 @@ class PermintaanPembelian extends Model
 {
     use HasFactory;
     protected $table = 'permintaan_pembelian';
-    protected $fillable = ['admin_id', 'agen_id', 'tanggal_permintaan', 'status', 'catatan_admin'];
+    protected $fillable = ['admin_id', 'agen_id', 'tanggal_permintaan', 'status', 'catatan_admin', 'catatan_agen','status_barang',
+    'catatan_barang'];
 
     public function admin(): BelongsTo
     {
