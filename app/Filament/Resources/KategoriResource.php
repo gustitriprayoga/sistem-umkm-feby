@@ -24,6 +24,11 @@ class KategoriResource extends Resource
         return auth()->user()->hasRole('pemilik');
     }
 
+    public static function canCreate(): bool
+    {
+        return auth()->user()->hasRole('pemilik');
+    }
+
     public static function form(Form $form): Form
     {
         return $form

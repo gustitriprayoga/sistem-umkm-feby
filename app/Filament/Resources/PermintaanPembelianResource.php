@@ -24,6 +24,11 @@ class PermintaanPembelianResource extends Resource
 
     protected static ?string $label = 'Request Pembelian';
 
+    public static function canCreate(): bool
+    {
+        return auth()->user()->hasRole(['pemilik', 'karyawan']);
+    }
+
     // Filter Query: Agen hanya melihat datanya sendiri
     public static function getEloquentQuery(): Builder
     {
