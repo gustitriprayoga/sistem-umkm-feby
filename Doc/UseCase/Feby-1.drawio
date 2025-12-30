@@ -1339,7 +1339,7 @@
     </mxGraphModel>
   </diagram>
   <diagram name="Kelola Kategori" id="OE2K5716JKWy_UvUlMxN">
-    <mxGraphModel dx="1426" dy="849" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1100" dy="894" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="xu86UVy47dPTFzFnoK9Q-0" />
         <mxCell id="xu86UVy47dPTFzFnoK9Q-1" parent="xu86UVy47dPTFzFnoK9Q-0" />
@@ -1372,7 +1372,7 @@
         <mxCell id="xu86UVy47dPTFzFnoK9Q-9" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="xu86UVy47dPTFzFnoK9Q-1" source="xu86UVy47dPTFzFnoK9Q-10" target="xu86UVy47dPTFzFnoK9Q-12" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="xu86UVy47dPTFzFnoK9Q-10" value="Memilih Buat, Edit, Hapus Kategori" style="rounded=1;whiteSpace=wrap;html=1;" parent="xu86UVy47dPTFzFnoK9Q-1" vertex="1">
+        <mxCell id="xu86UVy47dPTFzFnoK9Q-10" value="Memilih Edit, Hapus Kategori" style="rounded=1;whiteSpace=wrap;html=1;" parent="xu86UVy47dPTFzFnoK9Q-1" vertex="1">
           <mxGeometry x="100" y="240" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="xu86UVy47dPTFzFnoK9Q-11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="xu86UVy47dPTFzFnoK9Q-1" source="xu86UVy47dPTFzFnoK9Q-12" target="xu86UVy47dPTFzFnoK9Q-14" edge="1">
@@ -1443,7 +1443,7 @@
     </mxGraphModel>
   </diagram>
   <diagram name="Laporan Keunagan - pemilik" id="c_u4RXt4asSKC_gcZT8I">
-    <mxGraphModel dx="1426" dy="849" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1100" dy="894" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="aYTpTJbrAlLZizFDjOiO-0" />
         <mxCell id="aYTpTJbrAlLZizFDjOiO-1" parent="aYTpTJbrAlLZizFDjOiO-0" />
@@ -1497,7 +1497,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="aYTpTJbrAlLZizFDjOiO-14" value="Memilih Export Excel Dengan Format Yang Dipilih" style="rounded=1;whiteSpace=wrap;html=1;" parent="aYTpTJbrAlLZizFDjOiO-1" vertex="1">
+        <mxCell id="aYTpTJbrAlLZizFDjOiO-14" value="Menampilkan Daftar List Keuangan" style="rounded=1;whiteSpace=wrap;html=1;" parent="aYTpTJbrAlLZizFDjOiO-1" vertex="1">
           <mxGeometry x="100" y="330" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="aYTpTJbrAlLZizFDjOiO-15" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="aYTpTJbrAlLZizFDjOiO-1" source="aYTpTJbrAlLZizFDjOiO-19" target="aYTpTJbrAlLZizFDjOiO-21" edge="1">
@@ -1547,7 +1547,7 @@
     </mxGraphModel>
   </diagram>
   <diagram name="Kelola Distribusi" id="UvP7xbr03XXmUHsIGRUJ">
-    <mxGraphModel dx="1426" dy="849" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1100" dy="894" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="26dRpvTxJYjVUc7HpnbF-0" />
         <mxCell id="26dRpvTxJYjVUc7HpnbF-1" parent="26dRpvTxJYjVUc7HpnbF-0" />
@@ -1580,7 +1580,7 @@
         <mxCell id="26dRpvTxJYjVUc7HpnbF-9" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="26dRpvTxJYjVUc7HpnbF-1" source="26dRpvTxJYjVUc7HpnbF-10" target="26dRpvTxJYjVUc7HpnbF-12" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="26dRpvTxJYjVUc7HpnbF-10" value="Memilih Opsi Buat Atau Edit" style="rounded=1;whiteSpace=wrap;html=1;" parent="26dRpvTxJYjVUc7HpnbF-1" vertex="1">
+        <mxCell id="26dRpvTxJYjVUc7HpnbF-10" value="Memilih Opsi Buat Atau Hapus" style="rounded=1;whiteSpace=wrap;html=1;" parent="26dRpvTxJYjVUc7HpnbF-1" vertex="1">
           <mxGeometry x="100" y="240" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="26dRpvTxJYjVUc7HpnbF-11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="26dRpvTxJYjVUc7HpnbF-1" source="26dRpvTxJYjVUc7HpnbF-12" target="26dRpvTxJYjVUc7HpnbF-14" edge="1">
@@ -1626,7 +1626,7 @@
         <mxCell id="26dRpvTxJYjVUc7HpnbF-20" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="26dRpvTxJYjVUc7HpnbF-1" source="26dRpvTxJYjVUc7HpnbF-21" target="26dRpvTxJYjVUc7HpnbF-23" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="26dRpvTxJYjVUc7HpnbF-21" value="Validasi Sistem dan memberikan excel dengan format yang dipilih" style="whiteSpace=wrap;html=1;rounded=1;" parent="26dRpvTxJYjVUc7HpnbF-1" vertex="1">
+        <mxCell id="26dRpvTxJYjVUc7HpnbF-21" value="Validasi Sistem&amp;nbsp; dengan format yang dipilih" style="whiteSpace=wrap;html=1;rounded=1;" parent="26dRpvTxJYjVUc7HpnbF-1" vertex="1">
           <mxGeometry x="300" y="540" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="26dRpvTxJYjVUc7HpnbF-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="26dRpvTxJYjVUc7HpnbF-1" source="26dRpvTxJYjVUc7HpnbF-23" target="26dRpvTxJYjVUc7HpnbF-2" edge="1">
